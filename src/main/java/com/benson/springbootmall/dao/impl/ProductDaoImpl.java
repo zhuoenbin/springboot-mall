@@ -1,7 +1,7 @@
 package com.benson.springbootmall.dao.impl;
 
-import com.benson.springbootmall.constant.ProductCategory;
 import com.benson.springbootmall.dao.ProductDao;
+import com.benson.springbootmall.dto.ProductQueryParams;
 import com.benson.springbootmall.dto.ProductRequest;
 import com.benson.springbootmall.model.Product;
 import com.benson.springbootmall.rowmapper.ProductRowMapper;
@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,19 +23,19 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category,String search) {
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "select product_id,product_name, category, image_url, price, stock," +
                 "description,created_date, last_modified_date from product where 1=1";
         Map<String, Object> map = new HashMap<>();
-
-        if(category !=null){
+        //類別查詢
+        if(productQueryParams.getCategory() !=null){
             sql = sql + " and category = :category";
-            map.put("category", category.name());
+            map.put("category", productQueryParams.getCategory().name());
         }
         //關鍵字查詢
-        if(search != null){
+        if(productQueryParams.getSearch() != null){
             sql = sql + " and product_name like :search";
-            map.put("search","%" + search + "%");
+            map.put("search","%" + productQueryParams.getSearch() + "%");
         }
         List<Product> producList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return producList;
