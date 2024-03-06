@@ -26,16 +26,9 @@ public class ProductDaoImpl implements ProductDao {
     public Integer countProduct(ProductQueryParams productQueryParams) {
         String sql = "SELECT count(*) FROM product WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
-        //類別查詢
-        if(productQueryParams.getCategory() !=null){
-            sql = sql + " and category = :category";
-            map.put("category", productQueryParams.getCategory().name());
-        }
-        //關鍵字查詢
-        if(productQueryParams.getSearch() != null){
-            sql = sql + " and product_name like :search";
-            map.put("search","%" + productQueryParams.getSearch() + "%");
-        }
+        //查詢條件
+        sql = addFilteringSql(sql, map, productQueryParams);
+
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return total;
     }
@@ -45,16 +38,9 @@ public class ProductDaoImpl implements ProductDao {
         String sql = "select product_id,product_name, category, image_url, price, stock," +
                 "description,created_date, last_modified_date from product where 1=1";
         Map<String, Object> map = new HashMap<>();
-        //類別查詢
-        if(productQueryParams.getCategory() !=null){
-            sql = sql + " and category = :category";
-            map.put("category", productQueryParams.getCategory().name());
-        }
-        //關鍵字查詢
-        if(productQueryParams.getSearch() != null){
-            sql = sql + " and product_name like :search";
-            map.put("search","%" + productQueryParams.getSearch() + "%");
-        }
+        //查詢條件
+        sql = addFilteringSql(sql, map, productQueryParams);
+
         //排序(SQL語句要記得留空格)
         sql = sql + " order by " + productQueryParams.getOrderBy() + " " +productQueryParams.getSort(); //排序10-12
         //分頁(因為在controller有設定預設值，所以不用用判斷式處理)
@@ -135,4 +121,19 @@ public class ProductDaoImpl implements ProductDao {
         map.put("productId",productId);
         namedParameterJdbcTemplate.update(sql,map);
     }
+
+    //11-15(提煉)
+    private String addFilteringSql(String sql, Map<String,Object> map, ProductQueryParams productQueryParams){
+        if(productQueryParams.getCategory() !=null){
+            sql = sql + " and category = :category";
+            map.put("category", productQueryParams.getCategory().name());
+        }
+        //關鍵字查詢
+        if(productQueryParams.getSearch() != null){
+            sql = sql + " and product_name like :search";
+            map.put("search","%" + productQueryParams.getSearch() + "%");
+        }
+        return sql;
+    }
+
 }
