@@ -38,7 +38,11 @@ public class ProductDaoImpl implements ProductDao {
             map.put("search","%" + productQueryParams.getSearch() + "%");
         }
         //排序(SQL語句要記得留空格)
-        sql =sql + " order by " + productQueryParams.getOrderBy() + " " +productQueryParams.getSort(); //排序10-12
+        sql = sql + " order by " + productQueryParams.getOrderBy() + " " +productQueryParams.getSort(); //排序10-12
+        //分頁(因為在controller有設定預設值，所以不用用判斷式處理)
+        sql = sql + " LIMIT :limit OFFSET :offset";
+        map.put("limit",productQueryParams.getLimit());
+        map.put("offset",productQueryParams.getOffset());
 
         List<Product> producList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return producList;

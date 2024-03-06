@@ -8,6 +8,8 @@ public class ProductQueryParams {
     private String search;
     private String orderBy;  //排序10-12
     private String sort;     //排序10-12
+    private Integer limit;   //分頁10-13
+    private Integer offset;  //分頁10-13
 
     public ProductCategory getCategory() {
         return category;
@@ -39,5 +41,21 @@ public class ProductQueryParams {
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
     }
 }
