@@ -5,6 +5,7 @@ import com.benson.springbootmall.dto.ProductQueryParams;
 import com.benson.springbootmall.dto.ProductRequest;
 import com.benson.springbootmall.model.Product;
 import com.benson.springbootmall.service.ProductService;
+import com.benson.springbootmall.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -24,7 +25,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")   //關鍵字查詢跟類別查詢
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             //查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,  //required = false前端傳的參數是可選的
             @RequestParam(required = false) String search,  //關鍵字搜尋參數
@@ -42,9 +43,18 @@ public class ProductController {
         productQueryParams.setSort(sort);       //排序10-12
         productQueryParams.setLimit(limit);     //分頁10-13
         productQueryParams.setOffset(offset);   //分頁10-13
-
+        //取得 product List
         List<Product> productList =  productService.getProducts(productQueryParams);
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        //依據前端條件計算商品總筆數的方法
+        Integer total = productService.countProduct(productQueryParams);
+        //分頁
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping("/products/{productId}")
