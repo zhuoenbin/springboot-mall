@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Component
 public class UserDaoImpl implements UserDao {
-
+    //DaoImpl不能有if,else判斷，只能單純跟資料庫做溝通，判斷邏輯要實作在ServiceImpl
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
