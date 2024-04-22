@@ -1,11 +1,16 @@
 package com.benson.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class User {
 
     private Integer userId;
+    //@JsonProperty("e_email") //改變回傳給前端的屬性名稱
     private String email;
+    @JsonIgnore  //隱藏這個值傳回前端
     private String password;
     private Date createdDate;
     private Date lastModifiedDate;
