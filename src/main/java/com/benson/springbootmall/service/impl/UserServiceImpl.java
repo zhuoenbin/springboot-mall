@@ -3,7 +3,7 @@ package com.benson.springbootmall.service.impl;
 import com.benson.springbootmall.dao.UserDao;
 import com.benson.springbootmall.dto.UserLoginRequest;
 import com.benson.springbootmall.dto.UserRegisterRequest;
-import com.benson.springbootmall.model.User;
+import com.benson.springbootmall.model.Users;
 import com.benson.springbootmall.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +22,14 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public User getUserById(Integer userId) {
+    public Users getUserById(Integer userId) {
         return userDao.getUserById(userId);
     }
 
     @Override
     public Integer register(UserRegisterRequest userRegisterRequest) {
         // 檢查註冊的email
-        User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
+        Users user = userDao.getUserByEmail(userRegisterRequest.getEmail());
         if (user != null) {
             log.warn("該 email {} 已經被註冊", userRegisterRequest.getEmail()); //{}的值是(userRegisterRequest.getEmail())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(UserLoginRequest userLoginRequest) {
-        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+    public Users login(UserLoginRequest userLoginRequest) {
+        Users user = userDao.getUserByEmail(userLoginRequest.getEmail());
         // 檢查user是否存在
         if (user == null) {
             log.warn("該 email {} 尚未註冊", userLoginRequest.getEmail());

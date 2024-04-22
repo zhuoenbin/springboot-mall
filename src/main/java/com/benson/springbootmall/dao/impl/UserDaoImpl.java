@@ -2,7 +2,7 @@ package com.benson.springbootmall.dao.impl;
 
 import com.benson.springbootmall.dao.UserDao;
 import com.benson.springbootmall.dto.UserRegisterRequest;
-import com.benson.springbootmall.model.User;
+import com.benson.springbootmall.model.Users;
 import com.benson.springbootmall.rowmapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,15 +23,15 @@ public class UserDaoImpl implements UserDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public User getUserById(Integer userId) {
+    public Users getUserById(Integer userId) {
 
         String sql = "SELECT user_id, email, password, created_date, last_modified_date " +
-                " FROM user WHERE user_id = :userId";
+                " FROM users WHERE user_id = :userId";
 
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
 
-        List<User> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+        List<Users> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
 
         if (userList.size() > 0) {
             return userList.get(0);
@@ -41,13 +41,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public Users getUserByEmail(String email) {
         String sql = "SELECT user_id, email, password, created_date, last_modified_date " +
-                " FROM user WHERE email = :email";
+                " FROM users WHERE email = :email";
         Map<String, Object> map = new HashMap<>();
         map.put("email", email);
 
-        List<User> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+        List<Users> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
 
         if (userList.size() > 0) {
             return userList.get(0);
@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Integer createUser(UserRegisterRequest userRegisterRequest) {
-        String sql = "INSERT INTO user(email, password, created_date, last_modified_date) " +
+        String sql = "INSERT INTO users(email, password, created_date, last_modified_date) " +
                 " VALUES (:email, :password, :createdDate, :lastModifiedDate)";
         Map<String, Object> map = new HashMap<>();
         map.put("email", userRegisterRequest.getEmail());
